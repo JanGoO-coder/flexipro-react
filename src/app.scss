@@ -1,0 +1,27 @@
+* {
+  .link {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+
+.marginBottom{
+  margin-bottom: 25px;
+}
+
+.field{
+  width: 100%;
+  padding: 15px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  color: #6e6e6e;
+  outline: none;
+}
+.fromikInput{
+  margin-bottom: 25px;
+}
+.error{
+  color: red;
+  margin-bottom: 20px;
+}
