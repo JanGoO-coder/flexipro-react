@@ -15,6 +15,7 @@ import HuntJobs from "./pages/huntJobs/HuntJobs";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
 import CompanyProfile from "./pages/profilePage/CompanyProfile";
+import Categories from "./pages/myJobs/categories";
 
 function App() {
   const [userRole, setUserRole] = useState('company');
@@ -85,6 +86,10 @@ function App() {
         {
           path: "/myJobs",
           element: <PrivateRoute element={<MyJobs />} allowedRoles={[ 'company']} />,
+        },
+        {
+          path: "/jobCategories",
+          element: <PrivateRoute element={<Categories />} allowedRoles={[ 'company']} />,
         },
         {
           path: "/huntJobs",

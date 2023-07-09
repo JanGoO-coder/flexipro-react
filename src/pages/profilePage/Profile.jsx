@@ -9,12 +9,17 @@ import profileImg from '../../Photos/companyGraph.jpg';
 import axios from 'axios';
 // import RefreashToken from '../login/RefreashToken';
 import RefreshToken from '../login/RefreashToken';
+import { Chip } from 'primereact/chip';
+import { InputText } from "primereact/inputtext";
 
 
 
 function Profile() {
     const [visible, setVisible] = useState(false);
     const [profileData,setProfileData] = useState(null);
+    const [skills,setSkills]  = useState([])
+    const [showSkill,setShowSkill] = useState(false);
+    const [addSkill,setAddSkill] = useState('');
     const fileRef = useRef(null);
 
 
@@ -89,8 +94,54 @@ function Profile() {
 
     }
 
+    const getSkills = async ()=>{
+       const token = localStorage.getItem('token');
+       console.log('token', token)
+             try {
+           const response = await axios.get(
+          'http://127.0.0.1:8000/api/skills',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Include the authorization token in the headers
+            },
+          }
+        );
+        setSkills(response?.data.response?.skills)
+         } catch (error) {
+          console.log('erorr',error)
+         }
+    }
+
+    // remove skills 
+
+    const removeSkill = async (userId)=>{
+      const token = localStorage.getItem('token');
+      console.log('token', token)
+            try {
+          const response = await axios.post(
+         'http://127.0.0.1:8000/api/skills/remove',
+         {
+          id:userId
+         },
+         {
+           headers: {
+             Authorization: `Bearer ${token}`, // Include the authorization token in the headers
+           },
+         }
+       );
+       getSkills()  
+        } catch (error) {
+         console.log('erorr',error)
+        }
+    }
+
+
+
+
     useEffect(()=>{
         showProfileData()
+         getSkills()
+
     },[])
 
     // edit profile section  
@@ -132,6 +183,31 @@ function Profile() {
     
       return email;
     };
+
+    // add skills 
+    const AddedSkills = async ()=>{
+      setShowSkill(false)
+            const token = localStorage.getItem('token'); // Get the authorization token from localStorage
+    
+      try {
+        const response = await axios.post(
+          'http://127.0.0.1:8000/api/skills/add',
+          {
+            name:addSkill
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Include the authorization token in the headers
+            },
+          }
+        );
+     getSkills()       
+        // console.log('response ',response?.data?.response.success?.name);
+      } catch (error) {
+        console.log('Error', error);
+        RefreshToken(token);
+      }
+    }
 
   return (
     profileData?(
@@ -186,14 +262,14 @@ function Profile() {
     
           <div className='fromikInput'>
           <label htmlFor="">First Name</label>
-         <Field name="first_name"  className='field' placeholder="First name"/>
+         <Field name="first_name"  className='field' placeholder="Company preFix"/>
          {errors.first_name && touched.first_name ? (
            <div className='error'>{errors.first_name}</div>
          ) : null}
           </div>
           <div className='fromikInput'>
           <label htmlFor="">Last Name</label>
-         <Field name="last_name"  className='field' placeholder="Last name"/>
+         <Field name="last_name"  className='field' placeholder="Company postFix"/>
          {errors.last_name && touched.last_name ? (
            <div className='error'>{errors.last_name}</div>
          ) : null}
@@ -246,7 +322,7 @@ function Profile() {
               <div className="col-lg-3 order-lg-2">
                 <div className="card-profile-image">
                   <Link href="#">
-                    <img src="https://demos.creative-tim.com/argon-dashboard/assets-old/img/theme/team-4.jpg" className="rounded-circle" />
+                  <img src="https://demos.creative-tim.com/argon-dashboard/assets-old/img/theme/team-4.jpg" className="rounded-circle" />
                   </Link>
                 </div>
               </div>
@@ -284,9 +360,29 @@ function Profile() {
                   <i className="ni location_pin mr-2" />{profileData.user_role}
                 </div>
                 <div className="mt-4">
-                     skills controller
+                {skills?.map((skill)=>{
+                   return (
+                    
+                    <Chip
+                    key={skill.id}
+                    label={skill.name}
+                    removable
+                    style={{ margin: '5px' }}
+                    onRemove={() => removeSkill(skill?.id)}
+                  />
+                   )
+                })}
+                  <Chip label='Add skills' onClick={() => setShowSkill(true)} style={{cursor:'pointer',fontWeight:'bolder',marginLeft:'5px'}}/>
+                {/* <Button label="Show" icon="pi pi-external-link" onClick={() => setShowSkill(true)} /> */}
+<Dialog header="Please add the skill here" visible={showSkill} style={{ width: '50vw' }} onHide={() => setShowSkill(false)}>
+   
+    <div className="flex justify-content-center" style={{width:'100%'}}>
+            <InputText value={addSkill} onChange={(e)=>setAddSkill(e.target.value)} style={{width:'80%',marginRight:'10px'}} />
+              {addSkill.length>3?<Button label="addSkill"   icon="pi pi-external-link" onClick={() => AddedSkills()}/>:<Button label="AddSkill" disabled/>}
+        </div>
+
+</Dialog>
                 </div>
-                
                 <hr className="my-4" />
                 <p>Hi my name is {profileData.first_name} Here is my short introduction , {profileData.about}</p>
               </div>
@@ -308,7 +404,7 @@ function Profile() {
         <div className="pl-lg-4">
           <div className="row">
             <div className="col-lg-6">
-            <label className='form-control-label'>Name</label>
+            <label className='form-control-label'>Username</label>
               <div className="form-control form-control-alternative my-2">
                 <div className="input-value">{extractNameFromEmail(profileData.email)}</div>
               </div>
@@ -368,7 +464,7 @@ function Profile() {
     </div>
   </div>
         </>
-    ):<h1 style={{display:'flex',alignItems:'center',justifyContent:'center',width:'100%',height:'300px',fontSize:'40px'}}>User Profile is Loading ........</h1>
+    ):<h1 style={{display:'flex',alignItems:'center',justifyContent:'center',width:'100%',height:'300px',fontSize:'40px'}}>Profile is Loading ........</h1>
      
     )
    

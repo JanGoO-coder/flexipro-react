@@ -10,12 +10,16 @@ import axios from 'axios';
 // import RefreashToken from '../login/RefreashToken';
 import RefreshToken from '../login/RefreashToken';
 import { Chip } from 'primereact/chip';
+import { InputText } from "primereact/inputtext";
 
 
 
 function CompanyProfile() {
     const [visible, setVisible] = useState(false);
     const [profileData,setProfileData] = useState(null);
+    const [skills,setSkills]  = useState([])
+    const [showSkill,setShowSkill] = useState(false);
+    const [addSkill,setAddSkill] = useState('');
     const fileRef = useRef(null);
 
 
@@ -90,8 +94,54 @@ function CompanyProfile() {
 
     }
 
+    const getSkills = async ()=>{
+       const token = localStorage.getItem('token');
+       console.log('token', token)
+             try {
+           const response = await axios.get(
+          'http://127.0.0.1:8000/api/skills',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Include the authorization token in the headers
+            },
+          }
+        );
+        setSkills(response?.data.response?.skills)
+         } catch (error) {
+          console.log('erorr',error)
+         }
+    }
+
+    // remove skills 
+
+    const removeSkill = async (userId)=>{
+      const token = localStorage.getItem('token');
+      console.log('token', token)
+            try {
+          const response = await axios.post(
+         'http://127.0.0.1:8000/api/skills/remove',
+         {
+          id:userId
+         },
+         {
+           headers: {
+             Authorization: `Bearer ${token}`, // Include the authorization token in the headers
+           },
+         }
+       );
+       getSkills()  
+        } catch (error) {
+         console.log('erorr',error)
+        }
+    }
+
+
+
+
     useEffect(()=>{
         showProfileData()
+         getSkills()
+
     },[])
 
     // edit profile section  
@@ -133,6 +183,31 @@ function CompanyProfile() {
     
       return email;
     };
+
+    // add skills 
+    const AddedSkills = async ()=>{
+      setShowSkill(false)
+            const token = localStorage.getItem('token'); // Get the authorization token from localStorage
+    
+      try {
+        const response = await axios.post(
+          'http://127.0.0.1:8000/api/skills/add',
+          {
+            name:addSkill
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Include the authorization token in the headers
+            },
+          }
+        );
+     getSkills()       
+        // console.log('response ',response?.data?.response.success?.name);
+      } catch (error) {
+        console.log('Error', error);
+        RefreshToken(token);
+      }
+    }
 
   return (
     profileData?(
@@ -186,15 +261,15 @@ function CompanyProfile() {
           </div> */}
     
           <div className='fromikInput'>
-          <label htmlFor="">First Name</label>
-         <Field name="first_name"  className='field' placeholder="Company preFix"/>
+          <label htmlFor="">Company Name Prefix</label>
+         <Field name="first_name"  className='field' placeholder="Company Name Postfix"/>
          {errors.first_name && touched.first_name ? (
            <div className='error'>{errors.first_name}</div>
          ) : null}
           </div>
           <div className='fromikInput'>
-          <label htmlFor="">Last Name</label>
-         <Field name="last_name"  className='field' placeholder="Company postFix"/>
+          <label htmlFor="">Company Name Postfix</label>
+         <Field name="last_name"  className='field' placeholder="Company Name Postfix"/>
          {errors.last_name && touched.last_name ? (
            <div className='error'>{errors.last_name}</div>
          ) : null}
@@ -286,8 +361,28 @@ function CompanyProfile() {
                   <i className="ni location_pin mr-2" />{profileData.user_role}
                 </div>
                 <div className="mt-4">
-                
-            <Chip label="Thriller" removable />
+                {skills?.map((skill)=>{
+                   return (
+                    
+                    <Chip
+                    key={skill.id}
+                    label={skill.name}
+                    removable
+                    style={{ margin: '5px' }}
+                    onRemove={() => removeSkill(skill?.id)}
+                  />
+                   )
+                })}
+                  <Chip label='Add skills' onClick={() => setShowSkill(true)} style={{cursor:'pointer',fontWeight:'bolder',marginLeft:'5px'}}/>
+                {/* <Button label="Show" icon="pi pi-external-link" onClick={() => setShowSkill(true)} /> */}
+<Dialog header="Please add the skill here" visible={showSkill} style={{ width: '50vw' }} onHide={() => setShowSkill(false)}>
+   
+    <div className="flex justify-content-center" style={{width:'100%'}}>
+            <InputText value={addSkill} onChange={(e)=>setAddSkill(e.target.value)} style={{width:'80%',marginRight:'10px'}} />
+              {addSkill.length>3?<Button label="addSkill"   icon="pi pi-external-link" onClick={() => AddedSkills()}/>:<Button label="AddSkill" disabled/>}
+        </div>
+
+</Dialog>
                 </div>
                 <hr className="my-4" />
                 <p>Hi my name is {profileData.first_name} Here is my short introduction , {profileData.about}</p>
@@ -310,7 +405,7 @@ function CompanyProfile() {
         <div className="pl-lg-4">
           <div className="row">
             <div className="col-lg-6">
-            <label className='form-control-label'>Name</label>
+            <label className='form-control-label'>Company Alias</label>
               <div className="form-control form-control-alternative my-2">
                 <div className="input-value">{extractNameFromEmail(profileData.email)}</div>
               </div>
@@ -324,13 +419,13 @@ function CompanyProfile() {
           </div>
           <div className="row">
             <div className="col-lg-6">
-            <label className='form-control-label'>First Name</label>
+            <label className='form-control-label'>Company Name Prefix</label>
               <div className="form-control form-control-alternative">
                 <div className="input-value">{profileData.first_name}</div>
               </div>
             </div>
             <div className="col-lg-6">
-            <label className='form-control-label'>Last Name</label>
+            <label className='form-control-label'>Company Name Postfix</label>
               <div className="form-control form-control-alternative ">
                 <div className="input-value">{profileData.last_name}</div>
               </div>
@@ -338,13 +433,13 @@ function CompanyProfile() {
           </div>
           <div className="row">
             <div className="col-lg-6">
-            <label className='form-control-label'>User Id</label>
+            <label className='form-control-label'>Company Id</label>
               <div className="form-control form-control-alternative ">
                 <div className="input-value">{profileData.id}</div>
               </div>
             </div>
             <div className="col-lg-6">
-                <label className='form-control-label'>Experience</label>
+                <label className='form-control-label'>Company Age</label>
               <div className="form-control form-control-alternative ">
                 <div className="input-value">{`${profileData.experience} years`}</div>
               </div>
@@ -353,9 +448,9 @@ function CompanyProfile() {
         </div>
         <hr className="my-4" />
         {/* Description */}
-        <h6 className="heading-small text-muted mb-4">About me</h6>
+        <h6 className="heading-small text-muted mb-4">About Company</h6>
         <div className="pl-lg-4">
-        <label className='form-control-label'>About Me</label>
+        <label className='form-control-label'>About Company</label>
           <div className="form-control form-control-alternative ">
             <div className="input-value">{profileData.about}</div>
           </div>
