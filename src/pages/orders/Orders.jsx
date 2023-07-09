@@ -1,8 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./Orders.scss";
+import RefreshToken from "../login/RefreashToken";
 
 const Orders = () => {
+  const token = localStorage.getItem('token');
+    RefreshToken(token)
   const currentUser = {
     id: 1,
     username: "Anna",

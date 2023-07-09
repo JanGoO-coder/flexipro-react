@@ -4,10 +4,13 @@ import { Dialog } from 'primereact/dialog';
 import "./MyJobs.scss";
 import { useFormik, Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import RefreshToken from "../login/RefreashToken";
 
 
 function MyJobs() {
   const [visible, setVisible] = useState(false);
+  const token = localStorage.getItem('token');
+    RefreshToken(token)
   const currentUser = {
     id: 1,
     username: "Anna",

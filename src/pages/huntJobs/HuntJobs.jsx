@@ -12,9 +12,12 @@ import { Button } from 'primereact/button';
 import { useFormik, Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Dialog } from 'primereact/dialog';
+import RefreshToken from '../login/RefreashToken';
 
 function HuntJobs() {
     const [customers, setCustomers] = useState(null);
+    const token = localStorage.getItem('token');
+    RefreshToken(token)
     const [filters, setFilters] = useState({
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
         name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },

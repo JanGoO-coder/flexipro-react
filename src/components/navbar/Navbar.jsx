@@ -1,12 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Navbar.scss";
+import jwt_decode from "jwt-decode";
+
 
 function Navbar() {
   const [active, setActive] = useState(false);
   const [open, setOpen] = useState(false);
-
   const { pathname } = useLocation();
+  const [userRole, setUserRole] = useState(null);
+
+  // useEffect(() => {
+  //   // const handlePathnameChange = () => {
+  //     // };
+      
+  //     // // Listen for the "popstate" event which occurs when the pathname changes
+  //     // window.addEventListener("popstate", handlePathnameChange);
+      
+  //       localStorage.setItem("previousLocation", window.location.pathname);
+  //   console.log("window.location.pathname", window.location.pathname);
+  // }, [window.location.pathname]);
+
+  const verifyUserRole = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwt_decode(token);
+      setUserRole(decodedToken.user_role);
+    }
+  };
+
+  useEffect(() => {
+    verifyUserRole();
+  }, []);
 
   const isActive = () => {
     window.scrollY > 0 ? setActive(true) : setActive(false);
@@ -19,13 +44,7 @@ function Navbar() {
     };
   }, []);
 
-  // const currentUser = null
-
-  const currentUser = {
-    id: 1,
-    username: "Anna",
-    isSeller: false,
-  };
+  
 
   return (
     <div className={active || pathname !== "/" ? "navbar active" : "navbar"}>
@@ -41,15 +60,15 @@ function Navbar() {
           <span>Explore</span>
           <span>English</span>
           {/* {!currentUser?.isSeller && <span>Become a Seller</span>} */}
-          {currentUser ? (
+          {userRole ? (
             <div className="user" onClick={()=>setOpen(!open)}>
               <img
                 src="https://images.pexels.com/photos/1115697/pexels-photo-1115697.jpeg?auto=compress&cs=tinysrgb&w=1600"
                 alt=""
               />
-              <span>{currentUser?.username}</span>
+              <span>{userRole}</span>
               {open && <div className="options">
-                {currentUser.isSeller ?
+                {userRole=='employee' ?
                   <>
                     <Link className="link" to="/profile">
                       Profile
@@ -63,7 +82,7 @@ function Navbar() {
                 </Link>  
                    
                   </>:<>
-                  <Link className="link" to="/profile">
+                  <Link className="link" to="/company-profile">
                       Profile
                     </Link>
                     <Link className="link" to="/myJobs">
@@ -82,8 +101,8 @@ function Navbar() {
             </div>
           ) : (
             <>
-              <span>Sign in</span>
-              <Link className="link" to="/register">
+             
+              <Link className="link" to="/login">
                 <button>Join</button>
               </Link>
             </>

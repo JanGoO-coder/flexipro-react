@@ -1494,6 +1494,8 @@ textarea[resize='horizontal'] {
   border: 0;
   box-shadow: 0 1px 3px rgba(50, 50, 93, .15), 0 1px 0 rgba(0, 0, 0, .02);
   color: black;
+  margin-bottom: 15px;
+  background-color: rgb(226, 226, 226) ;
 }
 
 .form-control-alternative:focus {

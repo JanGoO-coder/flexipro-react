@@ -1,9 +1,9 @@
 import "./app.scss";
-import "primereact/resources/themes/lara-light-indigo/theme.css";     
-import "primereact/resources/primereact.min.css";  
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import "primereact/resources/primereact.min.css";
 import 'primeicons/primeicons.css';
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
-import React from "react";
+import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation } from "react-router-dom";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
 import Home from "./pages/home/Home";
@@ -12,18 +12,63 @@ import Orders from "./pages/orders/Orders";
 import MyJobs from "./pages/myJobs/MyJobs";
 import Profile from './pages/profilePage/Profile'
 import HuntJobs from "./pages/huntJobs/HuntJobs";
-
+import jwt_decode from "jwt-decode";
+import axios from "axios";
+import CompanyProfile from "./pages/profilePage/CompanyProfile";
 
 function App() {
-  var user =false;
+  const [userRole, setUserRole] = useState('company');
+  const [reload , setReload] = useState(true);
+  const [isExpired, setIsExpired] = useState(false);
+
+  const verifyUserRole = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwt_decode(token);
+      const expirationTime = decodedToken.exp * 1000;
+      const currentTime = Date.now();
+
+      // Check if the token has expired
+      if (currentTime > expirationTime) {
+        setIsExpired(true);
+      }
+      else {
+        setIsExpired(false);
+      }
+
+      setUserRole(decodedToken.user_role);
+    }
+    else setIsExpired(true)
+  };
+  
+  useLayoutEffect(()=>{
+    verifyUserRole()
+  },[])
+    
+
+  useEffect(() => {
+    verifyUserRole();
+   
+  }, []);
+
+ 
+  
+  const PrivateRoute = ({ element, allowedRoles }) => {
+    console.log('isExpired',isExpired, 'routes  ',userRole,allowedRoles,allowedRoles.includes(userRole))
+    if (allowedRoles.includes(localStorage.getItem("token")?jwt_decode(localStorage.getItem("token")).user_role:"") && !isExpired) {
+      return element;
+    } else {
+      return <Navigate to = '/login'/>; // Return null while the redirect is happening
+    }
+  };
+  
 
   const Layout = () => {
-    
     return (
       <div className="app">
         <Navbar />
-        <Outlet/>
-         <Footer />
+        <Outlet />
+        <Footer />
       </div>
     );
   };
@@ -35,25 +80,28 @@ function App() {
       children: [
         {
           path: "/",
-          element: <Home />,
+          element: <Home allowedRoles={['employee', 'company']}/>,
         },
         {
           path: "/myJobs",
-          element: <MyJobs />,
+          element: <PrivateRoute element={<MyJobs />} allowedRoles={[ 'company']} />,
         },
         {
           path: "/huntJobs",
-          element: <HuntJobs />,
+          element: <PrivateRoute element={<HuntJobs />} allowedRoles={['employee']} />,
         },
         {
           path: "/orders",
-          element: <Orders />,
+          element: <PrivateRoute element={<Orders />} allowedRoles={['company']} />,
         },
         {
           path: "/profile",
-          element: <Profile />,
+          element: <PrivateRoute element={<Profile />} allowedRoles={['employee']} />,
         },
-        
+        {
+          path: "/company-profile",
+          element: <PrivateRoute element={<CompanyProfile />} allowedRoles={['company']} />,
+        },
       ],
     },
     {

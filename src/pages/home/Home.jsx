@@ -6,8 +6,11 @@ import Slide from "../../components/slide/Slide";
 import CatCard from "../../components/catCard/CatCard";
 import ProjectCard from "../../components/projectCard/ProjectCard";
 import { cards, projects } from "../../data";
+import RefreshToken from "../login/RefreashToken";
 
 function Home() {
+  const token = localStorage.getItem('token');
+    RefreshToken(token)
   return (
     <div className="home">
       <Featured />

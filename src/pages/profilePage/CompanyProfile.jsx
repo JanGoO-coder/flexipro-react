@@ -9,10 +9,11 @@ import profileImg from '../../Photos/companyGraph.jpg';
 import axios from 'axios';
 // import RefreashToken from '../login/RefreashToken';
 import RefreshToken from '../login/RefreashToken';
+import { Chip } from 'primereact/chip';
 
 
 
-function Profile() {
+function CompanyProfile() {
     const [visible, setVisible] = useState(false);
     const [profileData,setProfileData] = useState(null);
     const fileRef = useRef(null);
@@ -139,7 +140,7 @@ function Profile() {
          <div className="main-content">
     {/* Top navbar */}
     {/* Header */}
-    <div className="header pb-8 pt-5 pt-lg-8 d-flex align-items-center" style={{minHeight: '600px', backgroundImage: 'url(https://raw.githubusercontent.com/creativetimofficial/argon-dashboard/gh-pages/assets-old/img/theme/profile-cover.jpg)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
+    <div className="header pb-8 pt-5 pt-lg-8 d-flex align-items-center" style={{minHeight: '600px', backgroundImage: `url(${profileImg})`, backgroundSize: 'cover', backgroundPosition: 'center'}}>
       {/* Mask */}
       <span className="mask bg-gradient-default opacity-8" />
       {/* Header container */}
@@ -186,14 +187,14 @@ function Profile() {
     
           <div className='fromikInput'>
           <label htmlFor="">First Name</label>
-         <Field name="first_name"  className='field' placeholder="First name"/>
+         <Field name="first_name"  className='field' placeholder="Company preFix"/>
          {errors.first_name && touched.first_name ? (
            <div className='error'>{errors.first_name}</div>
          ) : null}
           </div>
           <div className='fromikInput'>
           <label htmlFor="">Last Name</label>
-         <Field name="last_name"  className='field' placeholder="Last name"/>
+         <Field name="last_name"  className='field' placeholder="Company postFix"/>
          {errors.last_name && touched.last_name ? (
            <div className='error'>{errors.last_name}</div>
          ) : null}
@@ -246,7 +247,8 @@ function Profile() {
               <div className="col-lg-3 order-lg-2">
                 <div className="card-profile-image">
                   <Link href="#">
-                    <img src="https://demos.creative-tim.com/argon-dashboard/assets-old/img/theme/team-4.jpg" className="rounded-circle" />
+                    <img src="https://demos.creative-tim.com/argon-dashboard/assets-old/img/theme/team-4.jpg" className="rounded-circle"  style={{    outline: '10px solid lightblue',
+    outlineOffset: '5px'}}/>
                   </Link>
                 </div>
               </div>
@@ -284,9 +286,9 @@ function Profile() {
                   <i className="ni location_pin mr-2" />{profileData.user_role}
                 </div>
                 <div className="mt-4">
-                     skills controller
-                </div>
                 
+            <Chip label="Thriller" removable />
+                </div>
                 <hr className="my-4" />
                 <p>Hi my name is {profileData.first_name} Here is my short introduction , {profileData.about}</p>
               </div>
@@ -368,12 +370,12 @@ function Profile() {
     </div>
   </div>
         </>
-    ):<h1 style={{display:'flex',alignItems:'center',justifyContent:'center',width:'100%',height:'300px',fontSize:'40px'}}>User Profile is Loading ........</h1>
+    ):<h1 style={{display:'flex',alignItems:'center',justifyContent:'center',width:'100%',height:'300px',fontSize:'40px'}}>Profile is Loading ........</h1>
      
     )
    
 }
-    export default Profile
+    export default CompanyProfile
     
     
 const FileUpload = ({ fileRef, ...props }) => {
