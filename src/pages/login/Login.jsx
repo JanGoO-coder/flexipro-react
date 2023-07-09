@@ -6,9 +6,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 
-
-
-
 function Login() {
   const [signIn, toggle] = useState(true);
   const [userType, setUserType] = useState("");
@@ -18,7 +15,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const navigateTo = useNavigate()
+  const navigateTo = useNavigate();
 
   const handleNameChange = (event) => {
     setFirstName(event.target.value);
@@ -40,10 +37,10 @@ function Login() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     // Perform form field validation
     const validationErrors = {};
-  
+
     if (signIn) {
       if (!email) {
         validationErrors.email = "Email is required";
@@ -71,19 +68,19 @@ function Login() {
         validationErrors.userType = "User type is required";
       }
     }
-  
+
     // If there are validation errors, set the errors state and return
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-  
+
     // Clear validation errors
     setErrors({});
-  
+
     try {
-      let response,token;
-  
+      let response, token;
+
       if (signIn) {
         // Send a request to the login endpoint
         response = await axios.post("http://127.0.0.1:8000/api/auth/login", {
@@ -92,43 +89,43 @@ function Login() {
         });
         token = response?.data?.token;
         const decodedToken = jwt_decode(token);
-        const userRole = decodedToken.user_role; 
+        const userRole = decodedToken.user_role;
         // console.log('userType: ' + userRole)
         // console.log(token);
         localStorage.setItem("token", token);
-        
-        userRole=='company'?navigateTo('/company-profile'):navigateTo('/profile')
-        
+
+        userRole == 'company' ? navigateTo('/company-profile') : navigateTo('/profile')
+
       } else {
         // Send a request to the signup endpoint
         response = await axios.post("http://127.0.0.1:8000/api/auth/register", {
-          first_name:firstName,
-          last_name:lastName,
+          first_name: firstName,
+          last_name: lastName,
           email,
           password,
-          c_password:confirmPassword,
-          user_role:userType,
-    });
-    console.log("Register",response?.data?.response.token)
-    token = response?.data?.response.token;
-    localStorage.setItem("token", token);
-    toggle(true)
+          c_password: confirmPassword,
+          user_role: userType,
+        });
+        console.log("Register", response?.data?.response.token)
+        token = response?.data?.response.token;
+        localStorage.setItem("token", token);
+        toggle(true)
       }
-  
-  
+
+
       // Reset form fields and user type
       setFirstName("");
       setLastName("");
       setEmail("");
       setPassword("");
-      setConfirmPassword("");  
+      setConfirmPassword("");
       setUserType("");
     } catch (error) {
       // Handle authentication error, e.g., display an error message
       console.log("Authentication error:", error);
     }
   };
-  
+
   const handleSignUpClick = () => {
     // Clear form fields and errors
     setName("");
@@ -138,14 +135,13 @@ function Login() {
     setUserType("");
     setErrors({});
   };
-  
+
   const handleSignInClick = () => {
     // Clear form fields and errors
     setEmail("");
     setPassword("");
     setErrors({});
   };
-  
 
   return (
     <div className="loginPage">
@@ -184,14 +180,14 @@ function Login() {
               <span className="error">{errors.password}</span>
             )}
             <Components.Input
-  type="password"
-  placeholder="Confirm Password"
-  value={confirmPassword}
-  onChange={handleConfirmPasswordChange}
-/>
-{errors.confirmPassword && (
-  <span className="error">{errors.confirmPassword}</span>
-)}
+              type="password"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
+            />
+            {errors.confirmPassword && (
+              <span className="error">{errors.confirmPassword}</span>
+            )}
             <div className="userSelection">
               <div className="userType">
                 <RadioButton
@@ -255,7 +251,7 @@ function Login() {
               <Components.Paragraph>
                 Hey team! Hope you will work hard.
               </Components.Paragraph>
-              <Components.GhostButton onClick={() => {toggle(true), handleSignUpClick()}}>
+              <Components.GhostButton onClick={() => { toggle(true), handleSignUpClick() }}>
                 Sign In
               </Components.GhostButton>
             </Components.LeftOverlayPanel>
@@ -265,7 +261,7 @@ function Login() {
               <Components.Paragraph>
                 One step ahead, connect with the community.
               </Components.Paragraph>
-              <Components.GhostButton onClick={() => {toggle(false),handleSignInClick()}}>
+              <Components.GhostButton onClick={() => { toggle(false), handleSignInClick() }}>
                 Sign Up
               </Components.GhostButton>
             </Components.RightOverlayPanel>
