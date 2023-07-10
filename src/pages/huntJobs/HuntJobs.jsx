@@ -13,15 +13,20 @@ import { useFormik, Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Dialog } from 'primereact/dialog';
 import RefreshToken from '../login/RefreashToken';
+import axios from 'axios';
+import moment from 'moment';
 
 function HuntJobs() {
-    const [customers, setCustomers] = useState(null);
+    const [allJobs, setAllJobs] = useState(null);
+    const [sendJobData,setSendJobdata] = useState({
+        job_id:'',
+        company_id:''
+    })
     const token = localStorage.getItem('token');
     RefreshToken(token)
     const [filters, setFilters] = useState({
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
         name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-        'country.name': { value: null, matchMode: FilterMatchMode.STARTS_WITH },
         representative: { value: null, matchMode: FilterMatchMode.IN },
         status: { value: null, matchMode: FilterMatchMode.EQUALS },
         verified: { value: null, matchMode: FilterMatchMode.EQUALS }
@@ -30,7 +35,6 @@ function HuntJobs() {
     const [globalFilterValue, setGlobalFilterValue] = useState('');
     const [visible, setVisible] = useState(false);
 
-    const [statuses] = useState(['unqualified', 'qualified', 'new', 'negotiation', 'renewal']);
 
     const getSeverity = (status) => {
         switch (status) {
@@ -51,20 +55,30 @@ function HuntJobs() {
         }
     };
 
+    const getAllJObs = async ()=>{
+        const token = localStorage.getItem('token')
+       try {
+         const config ={
+             headers:{Authorization:`Bearer ${token}`}
+         }
+         const response = await axios.get("http://127.0.0.1:8000/api/jobs", config);
+        //  console.log('response ',response.data?.response?.jobs)
+ 
+       
+         setAllJobs(response.data?.response?.jobs);
+         
+     } catch (error) {
+          console.log('Error',error)
+     }
+        setLoading(false);
+    }
     useEffect(() => {
-        CustomerService.getCustomersMedium().then((data) => {
-            setCustomers(getCustomers(data));
-            setLoading(false);
-        });
+       
+        getAllJObs()
+       
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const getCustomers = (data) => {
-        return [...(data || [])].map((d) => {
-            d.date = new Date(d.date);
 
-            return d;
-        });
-    };
 
     const onGlobalFilterChange = (e) => {
         const value = e.target.value;
@@ -78,23 +92,17 @@ function HuntJobs() {
 
     const renderHeader = () => {
         return (
-            <div className="flex justify-content-end">
-                <span className="p-input-icon-left">
+            <div className="flex "style={{width:'80%'}}>
+                    <label className='text-dark bold'>Serach The Job </label>
+                <span className="p-input-icon-left"  style={{marginLeft:'20px'}}>
                     <i className="pi pi-search" />
-                    <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" />
+                    <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" style={{width:'500px'}}/>
                 </span>
             </div>
         );
     };
 
-    const countryBodyTemplate = (rowData) => {
-        return (
-            <div className="flex align-items-center gap-2">
-                <img alt="flag" src="https://primefaces.org/cdn/primereact/images/flag/flag_placeholder.png" className={`flag flag-${rowData.country.code}`} style={{ width: '24px' }} />
-                <span>{rowData.country.name}</span>
-            </div>
-        );
-    };
+    
 
 
 
@@ -102,9 +110,18 @@ function HuntJobs() {
         return <Tag value={rowData.status} severity={getSeverity(rowData.status)} />;
     };
 
-    const showModal =(rowData)=>{
+
+    const calculateTime= (rowData) => {
+        return <div>{moment(rowData.created_at).fromNow()}</div>
+    }
+    const showModal = (rowData)=>{
              console.log(rowData)
+             setSendJobdata({
+                job_id:rowData.id,
+                company_id:rowData.company_id
+             })
              setVisible(true)
+
     }
     const submitPerposal =(rowData)=>{
         return (
@@ -119,6 +136,31 @@ function HuntJobs() {
     }
 
 
+    
+
+    const sendTheJob = async (job)=>{
+      setVisible(false)
+        const data = {
+            job_id:sendJobData.job_id,
+            company_id:sendJobData.company_id,
+            description:job.Description
+        }
+        const token = localStorage.getItem('token');
+        try {
+            const config ={
+                headers:{Authorization:`Bearer ${token}`}
+            }
+            const response = await axios.post("http://127.0.0.1:8000/api/applications/sendRequest",data, config);
+           //  console.log('response ',response.data?.response?.jobs)
+              
+            
+        } catch (error) {
+             console.log('Error',error)
+        }
+           setLoading(false);
+       
+    }
+
 
     const header = renderHeader();
 
@@ -126,29 +168,28 @@ function HuntJobs() {
     // fromik validation form 
 
     const SignupSchema = Yup.object().shape({
-        Title: Yup.string()
-          .min(2, 'Too Short!')
-          .max(50, 'Too Long!')
-          .required('Enter your service Title'),
+      
         Description: Yup.string()
           .min(10, 'Too Short!')
           .max(1000, 'Too Long!')
           .required('Please Describe what your are offering'),
-          Duration:Yup.number().min(1).max(5).required('Enter the DeadLine'),
-          Price:Yup.number().min(5).max(1000).required('Please Enter the selling price')
         // email: Yup.string().email('Invalid email').required('Required'),
       });
 
     return (
         <>
-        <div className="card">
-            <DataTable value={customers} paginator rows={10} dataKey="id" filters={filters} filterDisplay="row" loading={loading}
-                    globalFilterFields={['name', 'country.name', 'representative.name', 'status']} header={header} emptyMessage="No customers found.">
+        <div className="card" style={{margin:'50px'}}>
+            <DataTable value={allJobs} paginator rows={10} dataKey="id" filters={filters} filterDisplay="row" loading={loading}
+                    globalFilterFields={['job_title', 'job_description','budget','duration_days', 'category_id']} header={header} emptyMessage="No customers found.">
                 
-                <Column header="Title" field='name'  style={{ minWidth: '12rem' }}/>
-                <Column header="Description"  style={{ minWidth: '12rem' }} body={countryBodyTemplate}/>
-                <Column header="Status" field='status'  style={{ minWidth: '14rem' }} body={statusBodyTemplate}/>
-                <Column header="Send Offer"   style={{ minWidth: '14rem' }} body={submitPerposal}/>
+                <Column header="Job Title" field='job_title'  style={{marginLeft:'15px' }}/>
+                <Column header="Job Description" field='job_description'  />
+                <Column header="Budget" field='budget'  />
+                <Column header= "Duration" field='duration_days'/>
+                <Column header = "Job Category" field='category_id'/>
+                <Column header = "Post Time" field='created_at' body={calculateTime}/>
+                {/* <Column header="Status" field='status'  style={{ minWidth: '14rem' }} body={statusBodyTemplate}/> */}
+                <Column header="Send Offer" body={submitPerposal}/>
             </DataTable>
 
         </div>
@@ -159,54 +200,38 @@ function HuntJobs() {
 
   <Formik
        initialValues={{
-         Title: '',
+        //  Title: '',
          Description: '',
-         Duration: '',
-         Price: '',
+        //  Duration: '',
+        //  Price: '',
        }}
        validationSchema={SignupSchema}
        onSubmit={values => {
          // same shape as initial values
+         sendTheJob(values)
          console.log(values);
        }}
      >
        {({ errors, touched }) => (
          <Form>
-            <div className='fromikInput'>
-           <Field name="Title"  className='field' placeholder="please enter Pitch line"/>
-           {errors.Title && touched.Title ? (
-             <div className='error'>{errors.Title}</div>
-           ) : null}
-            </div>
+          
            <div className='fromikInput'>
-           <Field as="textarea" name="Description" className='field' placeholder="Describe what you are selling"/>
+           <Field as="textarea" name="Description" className='field' placeholder="Describe what you are offering" style={{height:"400px"}}/>
            {errors.Description && touched.Description ? (
                <div className='error'>{errors.Description}</div>
                ) : null}
                </div>
 
-               <div className='fromikInput'>
-           <Field as="select" name="Duration" className='field' placeholder="Time you will take for this project">
-           <option value="1">One Day</option>
-             <option value="2">Two Days</option>
-             <option value="3">Three Days</option>
-             <option value="4">Four Days</option>
-             <option value="5">Five Days</option>
+             
 
-           </Field>
-           {errors.Duration && touched.Duration ? (
-               <div className='error'>{errors.Duration}</div>
-               ) : null}
-               </div>
-
-               <div className='fromikInput'>
+               {/* <div className='fromikInput'>
            <Field  name="Price" className='field' placeholder="Your budget for this project"/>
            {errors.Price && touched.Price ? (
                <div className='error'>{errors.Price}</div>
                ) : null}
                </div>
-                  
-                  {!errors.Price&&!errors.Description&&!errors.Duration&&!errors.Title?<Button severity="success" type="submit" label="Submit Perposal" icon="pi pi-send"  />:<Button severity="success" disabled label="Loading..." />}
+                   */}
+                  {!errors.Description?<Button severity="success" type="submit" label="Submit Perposal" icon="pi pi-send"  />:<Button severity="success" disabled label="Loading..." />}
 
          </Form>
        )}
