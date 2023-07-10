@@ -22,16 +22,32 @@ function App() {
   const [reload , setReload] = useState(true);
   const [isExpired, setIsExpired] = useState(false);
 
-  const verifyUserRole = () => {
+  const verifyUserRole = async () => {
     const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwt_decode(token);
       const expirationTime = decodedToken.exp * 1000;
       const currentTime = Date.now();
+     
 
       // Check if the token has expired
       if (currentTime > expirationTime) {
         setIsExpired(true);
+
+         localStorage.removeItem('token')
+      //   try {
+      //     const config ={
+      //         headers:{Authorization:`Bearer ${token}`}
+      //     }
+      //     const response = await axios.get("http://127.0.0.1:8000/api/auth/refresh", config);
+      //     console.log('response ',response)
+  
+        
+          
+      // } catch (error) {
+      //      console.log('Error',error)
+      // }
+
       }
       else {
         setIsExpired(false);
@@ -59,7 +75,7 @@ function App() {
     if (allowedRoles.includes(localStorage.getItem("token")?jwt_decode(localStorage.getItem("token")).user_role:"") && !isExpired) {
       return element;
     } else {
-      return isExpired?<Navigate to = '/'/>:<Navigate to = '/login'/>; // Return null while the redirect is happening
+      return <Navigate to = '/login'/>; // Return null while the redirect is happening
     }
   };
   
