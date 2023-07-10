@@ -35,6 +35,7 @@ function App() {
         setIsExpired(true);
 
          localStorage.removeItem('token')
+         window.location.reload();
       //   try {
       //     const config ={
       //         headers:{Authorization:`Bearer ${token}`}
