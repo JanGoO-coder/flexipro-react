@@ -66,7 +66,6 @@ function Categories() {
 
 //   add new Categories
       const addNewCategory = async (category)=>{
-        setEditVisible(true)
         
         const token = localStorage.getItem('token');
         console.log('token', token)

@@ -59,7 +59,7 @@ function App() {
     if (allowedRoles.includes(localStorage.getItem("token")?jwt_decode(localStorage.getItem("token")).user_role:"") && !isExpired) {
       return element;
     } else {
-      return <Navigate to = '/login'/>; // Return null while the redirect is happening
+      return isExpired?<Navigate to = '/'/>:<Navigate to = '/login'/>; // Return null while the redirect is happening
     }
   };
   
@@ -107,11 +107,15 @@ function App() {
           path: "/company-profile",
           element: <PrivateRoute element={<CompanyProfile />} allowedRoles={['company']} />,
         },
+        {
+          path: "/job-categories",
+          element: <PrivateRoute element={<Categories />} allowedRoles={['company']} />,
+        },
       ],
     },
     {
       path: "/login",
-      element: <Login />,
+      element:localStorage.getItem('token')? <Navigate to={'/'} /> : <Login />,
     },
   ]);
 

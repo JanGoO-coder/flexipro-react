@@ -45,6 +45,10 @@ function Navbar() {
   }, []);
 
   
+  const logOut = ()=>{
+    localStorage.removeItem('token');
+    window.location.reload()
+  }
 
   return (
     <div className={active || pathname !== "/" ? "navbar active" : "navbar"}>
@@ -77,9 +81,7 @@ function Navbar() {
                     <Link className="link" to="/huntJobs">
                       Find Jobs
                     </Link>
-                    <Link className="link" to="/login">
-                  Logout
-                </Link>  
+
                    
                   </>:<>
                   <Link className="link" to="/company-profile">
@@ -91,11 +93,14 @@ function Navbar() {
                 <Link className="link" to="/orders">
                   Orders
                 </Link>
-                <Link className="link" to="/login">
-                  Logout
+                <Link className="link" to="/job-categories">
+                  Job Categories
                 </Link>
                   </>
                 }
+                <Link className="link" onClick={()=>logOut()}>
+                  Logout
+                </Link>  
                   
               </div>}
             </div>

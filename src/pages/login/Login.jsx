@@ -96,8 +96,8 @@ function Login() {
         // console.log('userType: ' + userRole)
         // console.log(token);
         localStorage.setItem("token", token);
-        
-        userRole=='company'?navigateTo('/company-profile'):navigateTo('/profile')
+        window.location.reload()
+        // userRole=='company'?navigateTo('/company-profile'):navigateTo('/profile')
         
       } else {
         // Send a request to the signup endpoint
