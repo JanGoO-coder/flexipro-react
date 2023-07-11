@@ -18,6 +18,7 @@ import CompanyProfile from "./pages/profilePage/CompanyProfile";
 import Categories from "./pages/myJobs/categories";
 import UserJob from "./pages/huntJobs/UserJob";
 import CompanyJobs from "./pages/huntJobs/CompanyJobs";
+import GetAllUsers from "./pages/jobRequests/companyRequests";
 
 function App() {
   const [userRole, setUserRole] = useState('company');
@@ -137,6 +138,10 @@ function App() {
         {
           path: "/job-categories",
           element: <PrivateRoute element={<Categories />} allowedRoles={['company']} />,
+        },
+        {
+          path: "/all-users",
+          element: <PrivateRoute element={<GetAllUsers />} allowedRoles={['company']} />,
         },
       ],
     },

@@ -99,6 +99,9 @@ function Navbar() {
                 <Link className="link" to="/company-jobs">
                     Company Jobs
                     </Link>
+                    <Link className="link" to="/all-users">
+                      All Users
+                    </Link>
                 <Link className="link" to="/job-categories">
                   Job Categories
                 </Link>
