@@ -67,7 +67,7 @@ function Navbar() {
           {userRole ? (
             <div className="user" onClick={()=>setOpen(!open)}>
               <img
-                src="https://images.pexels.com/photos/1115697/pexels-photo-1115697.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                src="https://picsum.photos/600/600"
                 alt=""
               />
               <span>{userRole}</span>

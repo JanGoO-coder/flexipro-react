@@ -324,7 +324,7 @@ function CompanyProfile() {
               <div className="col-lg-3 order-lg-2">
                 <div className="card-profile-image">
                   <Link href="#">
-                    <img src="https://demos.creative-tim.com/argon-dashboard/assets-old/img/theme/team-4.jpg" className="rounded-circle"  style={{    outline: '10px solid lightblue',
+                    <img src="https://picsum.photos/600/600" className="rounded-circle"  style={{    outline: '10px solid lightblue',
     outlineOffset: '5px'}}/>
                   </Link>
                 </div>
