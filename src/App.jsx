@@ -19,6 +19,8 @@ import Categories from "./pages/myJobs/categories";
 import UserJob from "./pages/huntJobs/UserJob";
 import CompanyJobs from "./pages/huntJobs/CompanyJobs";
 import GetAllUsers from "./pages/jobRequests/companyRequests";
+import UserRequest from "./pages/jobRequests/userRequest";
+import OfferHistory from "./pages/jobRequests/offerHistory";
 
 function App() {
   const [userRole, setUserRole] = useState('company');
@@ -116,8 +118,16 @@ function App() {
           element: <PrivateRoute element={<HuntJobs />} allowedRoles={['employee']} />,
         },
         {
+          path: "/job-offers",
+          element: <PrivateRoute element={<UserRequest />} allowedRoles={['employee']} />,
+        },
+        {
           path: "/orders",
           element: <PrivateRoute element={<Orders />} allowedRoles={['company']} />,
+        },
+        {
+          path: "/offer-history",
+          element: <PrivateRoute element={<OfferHistory />} allowedRoles={['company']} />,
         },
         {
           path: "/profile",

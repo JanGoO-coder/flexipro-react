@@ -13,6 +13,7 @@ import axios from "axios";
 function MyJobs() {
   const [visible, setVisible] = useState(false);
   const [allJobs, setAllJobs] = useState([]);
+  const [Categories,setCategories] = useState([])
   const [editVisible, setEditVisible] = useState(false);
   const [editModelValues, setEditModleValues] = useState({
     id: '',
@@ -58,6 +59,7 @@ function MyJobs() {
 
   // get all Jobs
   const getAllJobs = async () => {
+    getCatories()
     const token = localStorage.getItem('token');
     console.log('token', token)
     try {
@@ -76,6 +78,24 @@ function MyJobs() {
     }
   }
 
+  const getCatories = async ()=>{
+    const token = localStorage.getItem('token')
+          try {
+            const response = await axios.get(
+              'http://127.0.0.1:8000/api/categories',
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`, // Include the authorization token in the headers
+                },
+              }
+            );
+            setCategories(response?.data?.response?.categories)
+            // console.log('response', response?.data?.response?.categories)
+             
+          } catch (error) {
+            console.log('erorr', error)
+          }
+  }
   //   add new Job
   const addNewJob = async (job) => {
 
@@ -242,13 +262,17 @@ function MyJobs() {
                             <div className='error'>{errors.duration_days}</div>
                           ) : null}
                         </div>
-                        <div className='fromikInput'>
-                          <label htmlFor="">Category Id</label>
-                          <Field name="category_id" className='field' placeholder="Select Category" />
-                          {errors.category_id && touched.category_id ? (
-                            <div className='error'>{errors.category_id}</div>
-                          ) : null}
-                        </div>
+                          
+                          <div className="fromikInput">
+
+                        <Field as="select" name="category_id" className="field">
+                          {Categories?.map(category => (
+                            <option key={category.id} value={category.id}>
+                              {category.name}
+                            </option>
+                          ))}
+                        </Field>
+                          </div>
 
                         {!errors.job_title && !errors.job_description && !errors.budget && !errors.duration_days && !errors.category_id ? <Button severity="success" type="submit" label="Post Job" icon="pi pi-send" /> : <Button severity="success" disabled label="Loading..." />}
 

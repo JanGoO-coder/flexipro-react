@@ -10,6 +10,7 @@ import axios from 'axios';
 // import RefreashToken from '../login/RefreashToken';
 import RefreshToken from '../login/RefreashToken';
 import { Chip } from 'primereact/chip';
+import { Rating } from "primereact/rating";
 import { InputText } from "primereact/inputtext";
 
 
@@ -21,6 +22,7 @@ function CompanyProfile() {
     const [showSkill,setShowSkill] = useState(false);
     const [addSkill,setAddSkill] = useState('');
     const fileRef = useRef(null);
+    const [rating, setRating] = useState(null);
 
 
     // fromik validation form 
@@ -328,6 +330,7 @@ function CompanyProfile() {
                 </div>
               </div>
             </div>
+            
             <div className="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
               <div className="d-flex justify-content-between">
                 <a href="#" className="btn btn-sm btn-info mr-4">Connect</a>
@@ -338,6 +341,16 @@ function CompanyProfile() {
               <div className="row">
                 <div className="col">
                   <div className="card-profile-stats d-flex justify-content-center mt-md-5">
+                  <Rating value={Math.floor(Math.random(1)*5)}  cancel={false} />
+                   </div>
+                   </div> 
+                   </div>
+            </div>
+
+            <div className="card-body pt-0 ">
+              <div className="row">
+                <div className="col">
+                  <div className="card-profile-stats d-flex justify-content-center ">
                     <div>
                       <span className="heading">{Math.round(Math.random()*100)}</span>
                       <span className="description">Friends</span>

@@ -10,7 +10,7 @@ import axios from 'axios';
 import moment from 'moment';
 import { Button } from 'primereact/button';
 
-function UserRequest() {
+function OfferHistory() {
     const [allJobs, setAllJobs] = useState(null);
   
     const token = localStorage.getItem('token');
@@ -31,7 +31,7 @@ function UserRequest() {
             case 'rejected':
                 return 'danger';
 
-            case 'approved':
+            case 'accepted':
                 return 'success';
 
             case 'pending':
@@ -48,11 +48,11 @@ function UserRequest() {
          const config ={
              headers:{Authorization:`Bearer ${token}`}
          }
-         const response = await axios.get("http://127.0.0.1:8000/api/requests/get/user", config);
-         console.log('response ',response?.data?.response?.requests)
+         const response = await axios.get("http://127.0.0.1:8000/api/requests/get/company", config);
+         console.log('response ',response?.data?.response?.Requests)
  
        
-         setAllJobs(response?.data?.response?.requests);
+         setAllJobs(response?.data?.response?.Requests);
          
      } catch (error) {
           console.log('Error',error)
@@ -66,25 +66,7 @@ function UserRequest() {
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 
-    // update job status 
-    const updateJobStatus = async (applicationId,jobStatus) => {
-
-        const token = localStorage.getItem('token')
-        try {
-          const config ={
-              headers:{Authorization:`Bearer ${token}`}
-          }
-          const response = await axios.post(`http://127.0.0.1:8000/api/requests/update/${applicationId}`,{
-            status:jobStatus
-          }, config);
-          console.log('response ',response);
-  
-        getAllJObs()
-          
-      } catch (error) {
-           console.log('Error',error)
-      }
-    }
+    
 
     const onGlobalFilterChange = (e) => {
         const value = e.target.value;
@@ -99,7 +81,7 @@ function UserRequest() {
     const renderHeader = () => {
         return (
             <div className="flex "style={{width:'80%'}}>
-                    <label className='text-dark bold'>Serach The Job </label>
+                    <label className='text-dark bold'>search Jobs </label>
                 <span className="p-input-icon-left"  style={{marginLeft:'20px'}}>
                     <i className="pi pi-search" />
                     <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Keyword Search" style={{width:'500px'}}/>
@@ -111,26 +93,8 @@ function UserRequest() {
     
     const statusBodyTemplate = (rowData) => {
        
-        return( 
-        <>
-        {
-            rowData.status=='pending'?(
-                <div style={{display:'flex',alignItems:'center',gap:'5px'}}>
-                <Button  severity={getSeverity('approved')}  style={{padding:'12px',fontWeight:'bold'}} onClick={()=>{updateJobStatus(rowData.id,'accepted')}}>Accept</Button>
-                <Button  severity={getSeverity('rejected')}  style={{padding:'12px',fontWeight:'bold'}} onClick={()=>{updateJobStatus(rowData.id,'rejected')}}>Reject</Button>
-                
-                </div>
-            ):
-            (
-                rowData.status=='rejected'?<Tag value = {'Rejected'} severity={getSeverity('rejected')}  style={{padding:'12px',fontWeight:'bold'}}/>:
-                <Tag value = {'Accepted'} severity={getSeverity('approved')}  style={{padding:'12px',fontWeight:'bold'}}/>
-                
-            
-            )
-        }
-                </>
-        )
-    };
+        return <Tag value = {rowData.status} severity={getSeverity(rowData.status)}  style={{padding:'12px',fontWeight:'bold',textTransform:'capitalize'}}/>
+    }        
 
     const calculateTime= (rowData) => {
         return <div>{moment(rowData.created_at).fromNow()}</div>
@@ -140,7 +104,7 @@ function UserRequest() {
     return (
         <>
         <div className="card" style={{margin:'50px'}}>
-        <h2 style={{marginBottom:'30px',marginTop:'15px',display:'flex',alignItems:'center',justifyContent:'center'}}>Company Jobs Perposals</h2>
+        <h2 style={{marginBottom:'30px',marginTop:'15px',display:'flex',alignItems:'center',justifyContent:'center'}}>Company Offer History</h2>
             <DataTable value={allJobs} paginator rows={10} dataKey="id" filters={filters} filterDisplay="row" loading={loading}
                     globalFilterFields={['job_id', 'company_id', 'status']} header={header} emptyMessage="No customers found.">
                 
@@ -154,4 +118,5 @@ function UserRequest() {
         </>
     );
 }
-export default UserRequest
+
+export default OfferHistory;

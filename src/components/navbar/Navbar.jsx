@@ -84,6 +84,9 @@ function Navbar() {
                     <Link className="link" to="/user-jobs">
                     User Jobs
                     </Link>
+                    <Link className="link" to="/job-offers">
+                      Job Offers
+                    </Link>
 
                    
                   </>:<>
@@ -101,6 +104,9 @@ function Navbar() {
                     </Link>
                     <Link className="link" to="/all-users">
                       All Users
+                    </Link>
+                    <Link className="link" to="/offer-history">
+                        Offer History
                     </Link>
                 <Link className="link" to="/job-categories">
                   Job Categories

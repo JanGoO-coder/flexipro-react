@@ -17,9 +17,9 @@ import moment from 'moment';
 
 function GetAllUsers() {
     const [allJobs, setAllJobs] = useState(null);
+    const [jobCategories,setJobCategories] = useState(null);
     const [sendJobData,setSendJobdata] = useState({
-        job_id:'',
-        company_id:''
+        user_id:'',
     })
     const token = localStorage.getItem('token');
     RefreshToken(token)
@@ -60,7 +60,7 @@ function GetAllUsers() {
          const config ={
              headers:{Authorization:`Bearer ${token}`}
          }
-         const response = await axios.get("http://127.0.0.1:8000/api/getAllUsers", config);
+         const response = await axios.get("http://127.0.0.1:8000/api/auth/getAllUsers", config);
         //  console.log('response ',response)
  
        
@@ -70,6 +70,16 @@ function GetAllUsers() {
           console.log('Error',error)
      }
         setLoading(false);
+        try {
+            const config1 = {
+                headers:{Authorization:`Bearer ${token}`}
+            }
+            const response = await axios.get('http://127.0.0.1:8000/api/jobs/company',config1);
+            setJobCategories(response?.data.response?.jobs)
+            // console.log('responseeee',response?.data.response?.jobs)
+        } catch (error) {
+            console.log('Error',error)
+        }
     }
     useEffect(() => {
        
@@ -116,8 +126,7 @@ function GetAllUsers() {
     const showModal = (rowData)=>{
              console.log(rowData)
              setSendJobdata({
-                job_id:rowData.id,
-                company_id:rowData.company_id
+                user_id:rowData.id,
              })
              setVisible(true)
 
@@ -140,17 +149,17 @@ function GetAllUsers() {
     const sendTheJob = async (job)=>{
       setVisible(false)
         const data = {
-            job_id:sendJobData.job_id,
-            company_id:sendJobData.company_id,
-            description:job.Description
+            user_id:sendJobData.user_id,
+            job_id:job.jobCategory,
+
         }
         const token = localStorage.getItem('token');
         try {
             const config ={
                 headers:{Authorization:`Bearer ${token}`}
             }
-            // const response = await axios.post("http://127.0.0.1:8000/api/applications/sendRequest",data, config);
-           //  console.log('response ',response.data?.response?.jobs)
+            const response = await axios.post("http://127.0.0.1:8000/api/requests/sendRequest",data, config);
+            console.log('response ',response)
               
             
         } catch (error) {
@@ -168,12 +177,13 @@ function GetAllUsers() {
 
     const SignupSchema = Yup.object().shape({
       
-        Description: Yup.string()
-          .min(10, 'Too Short!')
-          .max(1000, 'Too Long!')
-          .required('Please Describe what your are offering'),
-          Price:Yup.number().min(5,'please increase the budget')
-        // email: Yup.string().email('Invalid email').required('Required'),
+        // Description: Yup.string()
+        //   .min(10, 'Too Short!')
+        //   .max(1000, 'Too Long!')
+        //   .required('Please Describe what your are offering'),
+        //   Price:Yup.number().min(5,'please increase the budget')
+        // // email: Yup.string().email('Invalid email').required('Required'),
+        jobCategory: Yup.string().required('Please select a job category'),
       });
 
     return (
@@ -201,15 +211,12 @@ function GetAllUsers() {
 
   <Formik
        initialValues={{
-        //  Title: '',
-         Description: '',
-        //  Duration: '',
-         Price: '',
+         jobCategory: ''
        }}
        validationSchema={SignupSchema}
        onSubmit={values => {
          // same shape as initial values
-        //  sendTheJob(values)
+         sendTheJob(values)
          console.log(values);
        }}
      >
@@ -217,22 +224,16 @@ function GetAllUsers() {
          <Form>
           
            <div className='fromikInput'>
-           <Field as="textarea" name="Description" className='field' placeholder="Describe what you are offering" style={{minHeight:"200px"}}/>
-           {errors.Description && touched.Description ? (
-               <div className='error'>{errors.Description}</div>
-               ) : null}
+           <Field as="select" name="jobCategory" className="field">
+  {jobCategories.map(category => (
+    <option key={category.id} value={category.id}>
+      {category.job_title}
+    </option>
+  ))}
+</Field>
                </div>
-
-             
-
-               <div className='fromikInput'>
-           <Field  name="Price" className='field' placeholder="Your budget for this project"/>
-           {errors.Price && touched.Price ? (
-               <div className='error'>{errors.Price}</div>
-               ) : null}
-               </div>
-                  
-                  {!errors.Description?<Button severity="success" type="submit" label="Submit Perposal" icon="pi pi-send"  />:<Button severity="success" disabled label="Loading..." />}
+        
+                  {!errors.jobCategory?<Button severity="success" type="submit" label="Submit Perposal" icon="pi pi-send"  />:<Button severity="success" disabled label="Loading..." />}
 
          </Form>
        )}

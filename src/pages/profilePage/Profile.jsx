@@ -11,6 +11,7 @@ import axios from 'axios';
 import RefreshToken from '../login/RefreashToken';
 import { Chip } from 'primereact/chip';
 import { InputText } from "primereact/inputtext";
+import { Rating } from 'primereact/rating';
 
 
 
@@ -337,6 +338,15 @@ function Profile() {
               <div className="row">
                 <div className="col">
                   <div className="card-profile-stats d-flex justify-content-center mt-md-5">
+                  <Rating value={Math.floor(Math.random(1)*5)}  cancel={false} />
+                   </div>
+                   </div> 
+                   </div>
+            </div>
+            <div className="card-body pt-0 ">
+              <div className="row">
+                <div className="col">
+                  <div className="card-profile-stats d-flex justify-content-center ">
                     <div>
                       <span className="heading">{Math.round(Math.random()*100)}</span>
                       <span className="description">Friends</span>
