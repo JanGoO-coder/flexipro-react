@@ -81,6 +81,9 @@ function Navbar() {
                     <Link className="link" to="/huntJobs">
                       Find Jobs
                     </Link>
+                    <Link className="link" to="/user-jobs">
+                    User Jobs
+                    </Link>
 
                    
                   </>:<>
@@ -93,6 +96,9 @@ function Navbar() {
                 <Link className="link" to="/orders">
                   Orders
                 </Link>
+                <Link className="link" to="/company-jobs">
+                    Company Jobs
+                    </Link>
                 <Link className="link" to="/job-categories">
                   Job Categories
                 </Link>
