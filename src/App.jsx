@@ -121,10 +121,10 @@ function App() {
           path: "/job-offers",
           element: <PrivateRoute element={<UserRequest />} allowedRoles={['employee']} />,
         },
-        {
-          path: "/orders",
-          element: <PrivateRoute element={<Orders />} allowedRoles={['company']} />,
-        },
+        // {
+        //   path: "/orders",
+        //   element: <PrivateRoute element={<Orders />} allowedRoles={['company']} />,
+        // },
         {
           path: "/offer-history",
           element: <PrivateRoute element={<OfferHistory />} allowedRoles={['company']} />,

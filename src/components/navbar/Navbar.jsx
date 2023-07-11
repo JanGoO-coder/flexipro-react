@@ -96,9 +96,9 @@ function Navbar() {
                     <Link className="link" to="/myJobs">
                       Post Jobs
                     </Link>
-                <Link className="link" to="/orders">
+                {/* <Link className="link" to="/orders">
                   Orders
-                </Link>
+                </Link> */}
                 <Link className="link" to="/company-jobs">
                     Company Jobs
                     </Link>
