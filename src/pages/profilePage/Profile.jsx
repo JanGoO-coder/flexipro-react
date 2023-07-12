@@ -263,14 +263,14 @@ function Profile() {
     
           <div className='fromikInput'>
           <label htmlFor="">First Name</label>
-         <Field name="first_name"  className='field' placeholder="Company preFix"/>
+         <Field name="first_name"  className='field' placeholder="Technician First Name"/>
          {errors.first_name && touched.first_name ? (
            <div className='error'>{errors.first_name}</div>
          ) : null}
           </div>
           <div className='fromikInput'>
           <label htmlFor="">Last Name</label>
-         <Field name="last_name"  className='field' placeholder="Company postFix"/>
+         <Field name="last_name"  className='field' placeholder="Technician Last Name"/>
          {errors.last_name && touched.last_name ? (
            <div className='error'>{errors.last_name}</div>
          ) : null}
@@ -338,7 +338,7 @@ function Profile() {
               <div className="row">
                 <div className="col">
                   <div className="card-profile-stats d-flex justify-content-center mt-md-5">
-                  <Rating value={Math.floor(Math.random(1)*5)}  cancel={false} />
+                  <Rating value={Math.ceil(Math.random()*5)}  cancel={false} />
                    </div>
                    </div> 
                    </div>
@@ -367,7 +367,7 @@ function Profile() {
                   {extractNameFromEmail(profileData.email)}
                 </h3>
                 <div className="h5 font-weight-300">
-                  <i className="ni location_pin mr-2" />{profileData.user_role}
+                  <i className="ni location_pin mr-2" />{profileData.user_role=='employee'?'Technician':'Industory'}
                 </div>
                 <div className="mt-4">
                 {skills?.map((skill)=>{
@@ -404,7 +404,7 @@ function Profile() {
     <div className="card-header bg-white border-0">
       <div className="row align-items-center">
         <div className="col-8">
-          <h3 className="mb-0">{profileData.user_role} account</h3>
+          <h3 className="mb-0">{profileData.user_role=='employee'?'Technician':'Industory'} account</h3>
         </div>
       </div>
     </div>

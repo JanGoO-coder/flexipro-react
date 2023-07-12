@@ -103,13 +103,13 @@ function UserJob() {
     return (
         <>
         <div className="card" style={{margin:'50px'}}>
-        <h2 style={{marginBottom:'30px',marginTop:'15px',display:'flex',alignItems:'center',justifyContent:'center'}}>User Submited Jobs</h2>
+        <h2 style={{marginBottom:'30px',marginTop:'15px',display:'flex',alignItems:'center',justifyContent:'center'}}>Technician Submited Jobs</h2>
             <DataTable value={allJobs} paginator rows={10} dataKey="id" filters={filters} filterDisplay="row" loading={loading}
                     globalFilterFields={['job_id', 'description','company_id', 'status']} header={header} emptyMessage="No customers found.">
                 
                 <Column header="Job Id" field='job_id'  style={{marginLeft:'15px' }}/>
                 <Column header="Job Description" field='description'  />
-                <Column header="Company Id" field='company_id'  />
+                <Column header="Industory Id" field='company_id'  />
                 <Column header = "Send Time" field='created_at' body={calculateTime}/>
                 <Column header="Status" field='status'  style={{ minWidth: '14rem' }} body={statusBodyTemplate}/>
             </DataTable>

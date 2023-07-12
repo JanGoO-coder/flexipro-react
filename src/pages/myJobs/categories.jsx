@@ -165,7 +165,7 @@ function Categories() {
     <div className="myGigs">
       <div className="container">
         <div className="title">
-          <h1> Categories</h1>
+          <h1>Jobs Categories</h1>
           {currentUser.isSeller && (
               // <Link to="/postJob">
             //   <button>Post Job</button>

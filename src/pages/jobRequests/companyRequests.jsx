@@ -189,7 +189,7 @@ function GetAllUsers() {
     return (
         <>
         <div className="card" style={{margin:'50px'}}>
-        <h2 style={{marginBottom:'30px',marginTop:'15px',display:'flex',alignItems:'center',justifyContent:'center'}}>All  Users </h2>
+        <h2 style={{marginBottom:'30px',marginTop:'15px',display:'flex',alignItems:'center',justifyContent:'center'}}>All  Technicians </h2>
             <DataTable value={allJobs} paginator rows={10} dataKey="id" filters={filters} filterDisplay="row" loading={loading}
                     globalFilterFields={['first_name', 'last_name','email','experience','user_role']} header={header} emptyMessage="No customers found.">
                 
@@ -197,14 +197,14 @@ function GetAllUsers() {
                 <Column header="Last Name" field='last_name'  />
                 <Column header="Email" field='email'  />
                 <Column header= "Experience" field='experience'/>
-                <Column header = "User Type" field='user_role'/>
+                <Column header = "Technician Type" field='user_role'/>
                 <Column header = "Post Time" field='created_at' body={calculateTime}/>
                 {/* <Column header="Status" field='status'  style={{ minWidth: '14rem' }} body={statusBodyTemplate}/> */}
                 <Column header="Send Offer" body={submitPerposal}/>
             </DataTable>
 
         </div>
-        <Dialog header="Send Offer to user " visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
+        <Dialog header="Send Offer to Technician " visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
         
 
   <div>

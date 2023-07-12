@@ -55,7 +55,7 @@ function Navbar() {
       <div className="container">
         <div className="logo">
           <Link className="link" to="/">
-            <span className="text">Jobs Market</span>
+            <span className="text">Technician Job Market</span>
           </Link>
           <span className="dot">.</span>
         </div>
@@ -70,7 +70,7 @@ function Navbar() {
                 src="https://picsum.photos/600/600"
                 alt=""
               />
-              <span>{userRole}</span>
+              <span>{userRole=='employee'?'Technician':'Industory'}</span>
               {open && <div className="options">
                 {userRole=='employee' ?
                   <>
@@ -82,7 +82,7 @@ function Navbar() {
                       Find Jobs
                     </Link>
                     <Link className="link" to="/user-jobs">
-                    User Jobs
+                    Technician Jobs
                     </Link>
                     <Link className="link" to="/job-offers">
                       Job Offers
@@ -100,10 +100,10 @@ function Navbar() {
                   Orders
                 </Link> */}
                 <Link className="link" to="/company-jobs">
-                    Company Jobs
+                    Inductory Jobs
                     </Link>
                     <Link className="link" to="/all-users">
-                      All Users
+                      All Technicians
                     </Link>
                     <Link className="link" to="/offer-history">
                         Offer History
@@ -132,7 +132,7 @@ function Navbar() {
       {(active || pathname !== "/") && (
         <>
           <hr />
-          <div className="menu">
+          {/* <div className="menu">
             <Link className="link menuLink" to="/">
               Graphics & Design
             </Link>
@@ -160,7 +160,7 @@ function Navbar() {
             <Link className="link menuLink" to="/">
               Lifestyle
             </Link>
-          </div>
+          </div> */}
           <hr />
         </>
       )}

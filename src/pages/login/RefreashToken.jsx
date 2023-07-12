@@ -15,6 +15,7 @@ function RefreshToken(token) {
       if (currentTime > expirationTime) {
         console.log('Token expired');
         navigateTo('/login');
+        window.location.reload();
       }
       else {
         console.log(`Refreshing token`,existingToken)

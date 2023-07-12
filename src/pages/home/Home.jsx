@@ -5,7 +5,8 @@ import TrustedBy from "../../components/trustedBy/TrustedBy";
 import Slide from "../../components/slide/Slide";
 import CatCard from "../../components/catCard/CatCard";
 import ProjectCard from "../../components/projectCard/ProjectCard";
-import { cards, projects } from "../../data";
+import cards from "../../data";
+import projects from "./projects";
 import RefreshToken from "../login/RefreashToken";
 
 function Home() {
@@ -17,11 +18,11 @@ function Home() {
       <TrustedBy />
       <Slide slidesToShow={5} arrowsScroll={5}>
         {cards.map((card) => (
-          <CatCard key={card.id} card={card} />
+          <CatCard key={card.id} card={card} s/>
         ))}
       </Slide>
       
-      <div className="explore">
+      {/* <div className="explore">
         <div className="container">
           <h1>Explore the marketplace</h1>
           <div className="items">
@@ -108,12 +109,12 @@ function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="features dark">
         <div className="container">
           <div className="item">
             <h1>
-              liverr <i>business</i>
+              Technicians <i>Marketplace</i>
             </h1>
             <h1>
               A business solution designed for <i>teams</i>
@@ -124,19 +125,19 @@ function Home() {
             </p>
             <div className="title">
               <img src="./img/check.png" alt="" />
-              Connect to freelancers with proven business experience
+              Connect to Techincians with proven hands on skills
             </div>
 
             <div className="title">
               <img src="./img/check.png" alt="" />
-              Get matched with the perfect talent by a customer success manager
+              Get matched with the perfect talent by a Techincian success Rating
             </div>
 
             <div className="title">
               <img src="./img/check.png" alt="" />
               Manage teamwork and boost productivity with one powerful workspace
             </div>
-            <button>Explore Liverr Business</button>
+            <button>Explore Technicians Marketplace</button>
           </div>
           <div className="item">
             <img

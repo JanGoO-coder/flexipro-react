@@ -4,6 +4,7 @@
   justify-content: center;
   background-color: #013914;
   color: white;
+  overflow: hidden;
 
   .container {
     width: 1400px;
@@ -86,6 +87,7 @@
 
     .right {
       height: 100%;
+      margin-top: 115px;
       img {
         height: 100%;
         object-fit: contain;

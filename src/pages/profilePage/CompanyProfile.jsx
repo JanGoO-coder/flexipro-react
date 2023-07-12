@@ -263,15 +263,15 @@ function CompanyProfile() {
           </div> */}
     
           <div className='fromikInput'>
-          <label htmlFor="">Company Name Prefix</label>
-         <Field name="first_name"  className='field' placeholder="Company Name Postfix"/>
+          <label htmlFor="">Industory Name Prefix</label>
+         <Field name="first_name"  className='field' placeholder="Industory Name Postfix"/>
          {errors.first_name && touched.first_name ? (
            <div className='error'>{errors.first_name}</div>
          ) : null}
           </div>
           <div className='fromikInput'>
-          <label htmlFor="">Company Name Postfix</label>
-         <Field name="last_name"  className='field' placeholder="Company Name Postfix"/>
+          <label htmlFor="">Industory Name Postfix</label>
+         <Field name="last_name"  className='field' placeholder="Industory Name Postfix"/>
          {errors.last_name && touched.last_name ? (
            <div className='error'>{errors.last_name}</div>
          ) : null}
@@ -371,7 +371,7 @@ function CompanyProfile() {
                   {extractNameFromEmail(profileData.email)}
                 </h3>
                 <div className="h5 font-weight-300">
-                  <i className="ni location_pin mr-2" />{profileData.user_role}
+                  <i className="ni location_pin mr-2" />{profileData.user_role=='employee'?'Technician':'Industory'}
                 </div>
                 <div className="mt-4">
                 {skills?.map((skill)=>{
@@ -386,13 +386,13 @@ function CompanyProfile() {
                   />
                    )
                 })}
-                  <Chip label='Add skills' onClick={() => setShowSkill(true)} style={{cursor:'pointer',fontWeight:'bolder',marginLeft:'5px'}}/>
+                  <Chip label='Offer Jobs' onClick={() => setShowSkill(true)} style={{cursor:'pointer',fontWeight:'bolder',marginLeft:'5px'}}/>
                 {/* <Button label="Show" icon="pi pi-external-link" onClick={() => setShowSkill(true)} /> */}
-<Dialog header="Please add the skill here" visible={showSkill} style={{ width: '50vw' }} onHide={() => setShowSkill(false)}>
+<Dialog header="Please add the Jobs here" visible={showSkill} style={{ width: '50vw' }} onHide={() => setShowSkill(false)}>
    
     <div className="flex justify-content-center" style={{width:'100%'}}>
             <InputText value={addSkill} onChange={(e)=>setAddSkill(e.target.value)} style={{width:'80%',marginRight:'10px'}} />
-              {addSkill.length>3?<Button label="addSkill"   icon="pi pi-external-link" onClick={() => AddedSkills()}/>:<Button label="AddSkill" disabled/>}
+              {addSkill.length>3?<Button label="Offer Jobs"   icon="pi pi-external-link" onClick={() => AddedSkills()}/>:<Button label="Offer Jobs" disabled/>}
         </div>
 
 </Dialog>
@@ -408,17 +408,17 @@ function CompanyProfile() {
     <div className="card-header bg-white border-0">
       <div className="row align-items-center">
         <div className="col-8">
-          <h3 className="mb-0">{profileData.user_role} account</h3>
+          <h3 className="mb-0">{profileData.user_role=='employee'?'Technician':'Industory'} account</h3>
         </div>
       </div>
     </div>
     <div className="card-body">
       <div>
-        <h6 className="heading-small text-muted mb-4">{profileData.user_role} information</h6>
+        <h6 className="heading-small text-muted mb-4">{profileData.user_role=='employee'?'Technician':'Industory'} information</h6>
         <div className="pl-lg-4">
           <div className="row">
             <div className="col-lg-6">
-            <label className='form-control-label'>Company Alias</label>
+            <label className='form-control-label'>Industory Alias</label>
               <div className="form-control form-control-alternative my-2">
                 <div className="input-value">{extractNameFromEmail(profileData.email)}</div>
               </div>
@@ -432,13 +432,13 @@ function CompanyProfile() {
           </div>
           <div className="row">
             <div className="col-lg-6">
-            <label className='form-control-label'>Company Name Prefix</label>
+            <label className='form-control-label'>Industory Name Prefix</label>
               <div className="form-control form-control-alternative">
                 <div className="input-value">{profileData.first_name}</div>
               </div>
             </div>
             <div className="col-lg-6">
-            <label className='form-control-label'>Company Name Postfix</label>
+            <label className='form-control-label'>Industory Name Postfix</label>
               <div className="form-control form-control-alternative ">
                 <div className="input-value">{profileData.last_name}</div>
               </div>
@@ -446,13 +446,13 @@ function CompanyProfile() {
           </div>
           <div className="row">
             <div className="col-lg-6">
-            <label className='form-control-label'>Company Id</label>
+            <label className='form-control-label'>Industory Id</label>
               <div className="form-control form-control-alternative ">
                 <div className="input-value">{profileData.id}</div>
               </div>
             </div>
             <div className="col-lg-6">
-                <label className='form-control-label'>Company Age</label>
+                <label className='form-control-label'>Industory Age</label>
               <div className="form-control form-control-alternative ">
                 <div className="input-value">{`${profileData.experience} years`}</div>
               </div>
@@ -461,9 +461,9 @@ function CompanyProfile() {
         </div>
         <hr className="my-4" />
         {/* Description */}
-        <h6 className="heading-small text-muted mb-4">About Company</h6>
+        <h6 className="heading-small text-muted mb-4">About Industory</h6>
         <div className="pl-lg-4">
-        <label className='form-control-label'>About Company</label>
+        <label className='form-control-label'>About Industory</label>
           <div className="form-control form-control-alternative ">
             <div className="input-value">{profileData.about}</div>
           </div>
